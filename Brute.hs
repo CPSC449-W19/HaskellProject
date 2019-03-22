@@ -12,7 +12,6 @@ module Brute where
 -- Modules
 import Data.List
 import Data.Maybe
-import System.IO
 
 
 {-
@@ -145,14 +144,36 @@ tooNearPenHelper (ab) str = [tooNearComparePen a str | a <- ab]
 Function gives total machine penalties of an assignment
 -}
 getTotalMachPen :: [[Int]] -> String -> Int
-getTotalMachPen machPen assignment = sum [machPen !! (costMachNumber x) !! (fromJust $ findIndex (==x) assignment) | x <- assignment]
+getTotalMachPen machPen assignment = sum [machPen !! (fromJust $ findIndex (==x) assignment) !! (costMachNumber x) | x <- assignment]
+--getTotalMachPen machPen assignment = sum [machPen !! (costMachNumber x) !! (fromJust $ findIndex (==x) assignment) | x <- assignment]
+
+
+--filterAccordingTo :: [Bool] -> [a] -> [a]
+--filterAccordingTo bs xs = map snd . filter fst $ zip bs xs
+
+getTotalNearPen :: [(Char,Char,Int)] -> String -> Int
+getTotalNearPen nearPen assignment = sum [ tupleGet3rd x | x <- nearPen, checkTooNearPresence x assignment ]
 
 {-
+Check if the given assignment contains the given too-near pair
+-}
+checkTooNearPresence :: (Char, Char, Int) -> String -> Bool
+checkTooNearPresence (a, b, c) str =
+   if (tooNearCheck (a, b) str 0 == True)
+       then False
+       else True
+
+{-
+getAllNearPen :: [Bool] -> [(Char,Char,Int)] -> [(Char,Char,Int)]
+getAllNearPen bs xs = filterAccordingTo bs xs
+
 Function that gives total nearpenalties of assignment
 -}
-getTotalNearPen :: [(Char,Char,Int)] -> String -> Int
-getTotalNearPen nearPen assignment = sum [ tupleGet3rd x | x <- nearPen, and (tooNearPenHelper( tupleSizeAdjust nearPen) assignment ) ]
-
+{-getTotalNearPen :: [(Char,Char,Int)] -> String -> Int
+--getTotalNearPen nearPen assignment
+getTotalNearPen nearPen assignment = sum [tupleGet3rd x | x <- getAllNearPen( tooNearPenHelper ( (tupleSizeAdjust nearPen) assignment)  nearPen ) ]
+--getTotalNearPen nearPen assignment =  sum [ tupleGet3rd x | x <- nearPen, and ((tooNearPenHelper( tupleSizeAdjust nearPen) assignment ))]
+-}
 
 --------------- Constraints and total cost
 
