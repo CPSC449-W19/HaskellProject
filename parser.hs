@@ -282,7 +282,9 @@ main = do
   
   print fpa
   print fpaTaken
-  print $ getFpa ["(1,A)", "(2,B)", "(3,C)", "(3,", "forbidden machine:"]
+  print $ getFpa ["(1,A)", "(2,B)", "(3,C)", "(3,D)", "forbidden machine:"]
+
+
   print $ "(1,A)" !! 3
 
   print name
@@ -292,7 +294,7 @@ main = do
   print mp
   print tnp
   
-  {-
+  
   if (fpaTaken == ["invalid machine/task"]) then putStrLn "invalid machine/task" else putStrLn "lol"
 
   when (fpaTaken == ["invalid machine/task"]) $ putStrLn "invalid machine/task"
@@ -302,4 +304,4 @@ main = do
   let yep = if name == "Error" || fpa == [(-1,'R')] || fm == [(-1,'R')] || tnt == [('R', 'R')] || mp == [[-1]] || tnp == [('R','R',-1)] then 
             "Error while parsing input file" else "Nothing"
 
-  when (yep == "Error while parsing input file") $ putStrLn "Error while parsing input file"-}
+  when (yep == "Error while parsing input file") $ putStrLn "Error while parsing input file"
