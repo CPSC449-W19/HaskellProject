@@ -73,15 +73,24 @@ parseFpa ("":xs) = parseFpa xs
 parseFpa (x:xs) = ["Error"]
 
 getFpa :: [String] -> [String]
+getFpa [] = []
 getFpa ("":xs) = getFpa xs
 getFpa ("forbidden machine:":xs) = ["forbidden machine:"]
-getFpa (x:xs) = if (fpaOkay x) == 0 then getFpa xs else if fpaOkay x == 1 then ["invalid machine/task"] else ["Error"]
+getFpa (x:xs) = if (fpaOkay x) == 0 && (fpaOkay2 (x !! 1) xs == True) && (fpaOkay2 (x !! 3) xs == True) then getFpa xs else if 
+                (fpaOkay x) == 1 && (fpaOkay2 (x !! 1) xs == True) && (fpaOkay2 (x !! 3) xs == True) then ["invalid machine/task"] else if
+                (fpaOkay x) == 2 && (fpaOkay2 (x !! 1) xs == True) && (fpaOkay2 (x !! 3) xs == True) then ["Error while parsing input file"] else if
+                (fpaOkay2 (x !! 1) xs == False) || (fpaOkay2 (x !! 3) xs == False) then ["partial assignment error"] else ["Error while parsing input file"]
 
 fpaOkay :: String -> Int
+fpaOkay "" = 0
 fpaOkay x = if ((length x == 5) && (x !! 0 == '(') && (validMach (x !! 1) == True) 
           && (x !! 2 == ',') && (validTask (x !! 3) == True) && (x !! 4 == ')')) then 0 else if 
           (((length x == 5) && (x !! 0 == '(') && (x !! 2 == ',') && (x !! 4 == ')')) && ((validMach (x !! 1) == False) || (validTask (x !! 3) == False))) then 1 else
           2
+
+fpaOkay2 :: Char -> [String] -> Bool
+fpaOkay2 x [] = True
+fpaOkay2 x (y:ys) = if (elem x y == True) then False else fpaOkay2 x ys          
 --end parsing forced partial assignment--
 
 --for parsing forbidden machine--
@@ -154,7 +163,6 @@ mpOkay [] = True
 mpOkay (x:xs) = if (isInt x == True) && (mpOkay xs == True) then True
                 else False
                 
-
 isInt :: [Char] -> Bool
 isInt (x:xs) = if (x == '0' && length xs == 0) || (elem x ['1'..'9'] && isNumeric xs) then True else False
 
@@ -185,7 +193,7 @@ tnpOkay :: String -> Bool
 tnpOkay x = if ((length x == 7) && (x !! 0 == '(') && (validTask (x !! 1) == True) 
           && (x !! 2 == ',') && (validTask (x !! 3) == True) && (x !! 4 == ',')) 
           && (validMach (x !! 5) == True) && (x !! 6 ==')') then True else
-          False
+          False     
 --------end too-near penalities-------
 
 ----for valid machine and task---------
@@ -271,16 +279,26 @@ main = do
   let tempTnp1 = takeWhile(/=[]) findingTnp
   let tempTnp2 = filter(/="") $ takeWhile(/="too-near penalities") $ reverse tempTnp1
   let tnp = if tnpTaken == [] then reverse $ readTupleCCI tempTnp2 else [('R','R',-1)]
+  
+  print fpa
+  print fpaTaken
+  print $ getFpa ["(1,A)", "(2,B)", "(3,C)", "(3,", "forbidden machine:"]
+  print $ "(1,A)" !! 3
 
-  print (name, fpa, fm, tnt, mp, tnp)
+  print name
+  print fpa
+  print fm
+  print tnt
+  print mp
+  print tnp
   
-{- testing stuff
-  
+  {-
   if (fpaTaken == ["invalid machine/task"]) then putStrLn "invalid machine/task" else putStrLn "lol"
 
   when (fpaTaken == ["invalid machine/task"]) $ putStrLn "invalid machine/task"
   when (fmTaken == ["invalid machine/task"]) $ putStrLn "invalid machine/task"
   when (tntTaken == ["invalid machine/task"]) $ putStrLn "invalid machine/task"
+  when (tnpTaken == ["invalid penalty"]) $ putStrLn "invalid penalty"
   let yep = if name == "Error" || fpa == [(-1,'R')] || fm == [(-1,'R')] || tnt == [('R', 'R')] || mp == [[-1]] || tnp == [('R','R',-1)] then 
             "Error while parsing input file" else "Nothing"
 
