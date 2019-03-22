@@ -14,10 +14,6 @@ import Data.List
 import Data.Maybe
 import System.IO
 
--------------------------------------------------------
------Declare Module here, how should we do that??------
--------------------------------------------------------
-
 
 {-
 Function for Forced Assignments
@@ -186,6 +182,21 @@ calcLowestCostAssignment :: [[Int]] -> [(Char,Char,Int)] -> [String] -> String
 calcLowestCostAssignment machPen tooNearPen assignments = assignments !! (fromJust $ findIndex (== calcLowestCost machPen tooNearPen assignments) (getAllCosts machPen tooNearPen assignments))
 
 allPossible = permutations "ABCDEFGH"
+
+finalHardConstraintHelper :: [(Int,Char)] -> [(Int,Char)] -> [(Char,Char)] -> [String]
+finalHardConstraintHelper a b c = (hardConstraint3 c (hardConstraint2 b (hardConstraint1 a allPossible)))
+
+hardConstraintHelper2 :: [String] -> Bool
+hardConstraintHelper2 [] = False
+hardConstraintHelper2 _ = True
+
+
+outputSolution :: [(Int, Char)] -> [(Int, Char)] -> [(Char, Char)] -> [[Int]] -> [(Char,Char,Int)] -> String
+outputSolution a b c d e = if (hardConstraintHelper2 (finalHardConstraintHelper a b c) == True)
+  then "Solution "  ++ intersperse ' ' (calcLowestCostAssignment d e (finalHardConstraintHelper a b c)) ++ "; Quality: " ++ show (calcLowestCost d e  (finalHardConstraintHelper a b c))
+  else "No valid solution possible!"
+
+
 
 
 --solutionsAfterHC = hardConstraint3( hardConstraint2 (hardConstraint3 allPossible))
