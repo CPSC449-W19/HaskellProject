@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#Run Haskell file
+
+ghc --make main.hs
+
+for file in AllTests/*.txt
+do
+	name=${file##*/}
+	base=${name%.txt}
+	./main "$file" Logs/"${base}_Logs.txt"
+done
+
+diff Logs Correct

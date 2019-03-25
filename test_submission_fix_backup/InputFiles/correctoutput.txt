@@ -1,0 +1,18 @@
+wrongpartialassignment -> partial assignment error
+invalidtoonear         -> No valid solution possible!
+invalid2               -> No valid solution possible!
+invalidforbidden.txt   -> No valid solution possible!
+wrongmachine           -> invalid machine/task
+wrongtask              -> invalid machine/task
+wrongmachpenalty1      -> machine penalty error
+wrongmachpenalty2      -> machine penalty error
+wrongnumbermachine     -> invalid penalty
+wrongtooneartask       -> invalid task
+wrongnumbertoonear     -> invalid penalty
+nochoice               -> Solution H G F E D C B A; Quality: 800
+machpen1               -> Solution A B C D E F H G; Quality: 36
+machpen2               -> Solution A B C D E H G F; Quality: 45
+toonearpen1            -> Solution A B C D E H F G; Quality: 16
+toonearpen2            -> Solution A B C D E G F H; Quality: 18
+optzero                -> Solution A B C D E F G H; Quality: 0
+nochoice2              -> Solution A B C D E F G H; Quality: 8
